@@ -1,13 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import Login from './pages/Login';
+import ApplyNow from './pages/ApplyNow';
+import HomePage from './pages/HomePage';
+import Academics from './pages/Academics';
+import PaymentMethods from './pages/PaymentMethods';
+import Programmes from './pages/Programmes';
+import Staff from './pages/Staff';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Routes>
+        <Route path='academics' element={<Academics />}></Route>
+        <Route path='apply-now' element={<ApplyNow />}></Route>
+        <Route path='home' element={<HomePage />}></Route>
+        <Route path='login' element={<Login />}></Route>
+        <Route path='payment-methods' element={<PaymentMethods />}></Route>
+        <Route path='programmes' element={<Programmes />}></Route>
+        <Route path='staff' element={<Staff />}></Route>
+      </Routes>
+    </Router>
   </React.StrictMode>
 );
 
