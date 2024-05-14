@@ -10,12 +10,14 @@ import Academics from './pages/Academics';
 import PaymentMethods from './pages/PaymentMethods';
 import Programmes from './pages/Programmes';
 import Staff from './pages/Staff';
+import App from './App';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <Router>
       <Routes>
+        <Route path='/' element={<App />}></Route>
         <Route path='academics' element={<Academics />}></Route>
         <Route path='apply-now' element={<ApplyNow />}></Route>
         <Route path='home' element={<HomePage />}></Route>
