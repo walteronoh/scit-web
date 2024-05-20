@@ -15,7 +15,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Book, Home } from '@mui/icons-material';
+import { Book, Home, Logout } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 
@@ -106,11 +106,11 @@ export default function ResponsiveDrawer(props: Props) {
             </List>
             <Divider />
             <List>
-                {['LogOut'].map((text, index) => (
+                {['Log Out'].map((text, index) => (
                     <ListItem key={text} disablePadding>
                         <ListItemButton>
                             <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                <Logout />
                             </ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItemButton>
@@ -187,9 +187,7 @@ export default function ResponsiveDrawer(props: Props) {
                     {props.component ? <props.component /> : <></>}
                 </Box>
             </Box>
-            <Box component="footer">
-                <Footer />
-            </Box>
+            <Footer />
         </>
     );
 }

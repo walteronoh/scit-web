@@ -32,7 +32,35 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.carousel-box {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  /* height: 95rem !important; */
+}
+
+.carousel-item {
+  position: relative;
+  height: 700px;
+  background: transparent !important;
+  /* Adjust height as needed */
+  /* background-size: cover;
+  background-position: center;*/
+  color: #fff !important; 
+  /* Ensure text is visible on the background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* text-align: center; */
+}
+
+.carousel-content {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 20px;
 }
