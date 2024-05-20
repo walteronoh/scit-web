@@ -20,4 +20,10 @@ const setUserSession = (data: Record<string, any>) => {
     });
 }
 
-export { getUserSession, setUserSession }
+const clearSession = () => {
+    window.localStorage.removeItem("userType");
+    window.localStorage.removeItem("userName");
+    window.localStorage.removeItem("fullNames");
+}
+
+export { getUserSession, setUserSession, clearSession }

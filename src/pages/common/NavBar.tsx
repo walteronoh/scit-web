@@ -18,6 +18,7 @@ import Typography from '@mui/material/Typography';
 import { Book, Home, Logout } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import Footer from './Footer';
+import { clearSession } from './session';
 
 const drawerWidth = 240;
 
@@ -88,6 +89,11 @@ export default function ResponsiveDrawer(props: Props) {
         navigate(route);
     }
 
+    const handleLogOut = () => {
+        clearSession();
+        navigate("/", { replace: true })
+    }
+
     const drawer = (
         <div>
             <Toolbar />
@@ -108,7 +114,7 @@ export default function ResponsiveDrawer(props: Props) {
             <List>
                 {['Log Out'].map((text, index) => (
                     <ListItem key={text} disablePadding>
-                        <ListItemButton>
+                        <ListItemButton onClick={handleLogOut}>
                             <ListItemIcon>
                                 <Logout />
                             </ListItemIcon>

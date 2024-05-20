@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
+import { Alert, Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authenticateUser } from "../api/api";
@@ -6,13 +6,22 @@ import { authenticateUser } from "../api/api";
 export default function Login() {
     const navigate = useNavigate();
     const [input, setInput] = useState({ username: "", password: "" });
+    const [alert, setAlert] = useState({
+        severity: "0",
+        message: ""
+    });
     const handleLogin = () => {
-        // Redirect to dashboard
-        // navigate("/home", { replace: true });
         authenticateUser(input.username, input.password).then((resp) => {
-            console.log(resp);
+            if (resp) {
+                // Redirect to dashboard
+                navigate("/home", { replace: true });
+            } else {
+                setAlert({ severity: "1", message: "We were not able to authenticate your credentials. Please use the right username/password!" })
+            }
         }).catch((err) => {
-            console.log(err);
+            setAlert({
+                severity: "1", message: "We encountered an error while authenticating. Please try again later"
+            });
         });
     }
     return (
@@ -44,6 +53,13 @@ export default function Login() {
                     onChange={(e) => setInput((prevValue) => ({ ...prevValue, password: e.target.value }))}
                 />
                 <Button variant="contained" onClick={handleLogin}>Login</Button>
+                {
+                    alert.message &&
+                    <Alert severity={alert.severity == "1" ? 'error' : 'success'}>{alert.message}</Alert>
+                }
+                <Typography variant="body2" sx={{ textAlign: "center", marginTop: "2rem" }}>
+                    Username: admin, Password: password
+                </Typography>
             </Box>
         </Box>
     );
