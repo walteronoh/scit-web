@@ -6,9 +6,12 @@ export default function Academics() {
     return (
         <Box>
             <Box>
-                <Typography variant="h6">
-                    Academics
-                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', paddingRight: "20px" }}>
+                    <Typography variant="h6">
+                        Academics
+                    </Typography>
+                    <Button sx={{ height: "2rem", margin: "30px" }} variant="contained" color="info">Add</Button>
+                </Box>
                 <Masonry columns={{ xs: 1, sm: 1, md: 4, }}>
                     {
                         [1, 2, 3, 4, 5].map((v, i) =>

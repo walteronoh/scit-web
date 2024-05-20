@@ -7,13 +7,14 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 // import { TabPanel } from '@mui/lab';
 import { Home, Book } from '@mui/icons-material';
-import { Avatar, Typography } from '@mui/material';
+import { Avatar, Button, Typography } from '@mui/material';
 import Academics from '../Academics';
 import HomePage from '../HomePage';
 import Programmes from '../Programmes';
 import PaymentMethods from '../PaymentMethods';
 import Staff from '../Staff';
 import Footer from './Footer';
+import { useNavigate } from 'react-router-dom';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -53,6 +54,7 @@ function a11yProps(index: number) {
 export default function MenuBar() {
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
+    const navigate = useNavigate();
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -107,11 +109,15 @@ export default function MenuBar() {
                 width: "100%"
             }}>
                 {/* #c9e265 */}
-                <AppBar position="static" sx={{ backgroundColor: "green", }}> 
-                    <Avatar alt="JKUAT Logo"
-                        src="/jkuat-logo.png"
-                        sx={{ width: 35, height: 35, padding: "30px" }}
-                    />
+                <AppBar position="static" sx={{ backgroundColor: "green", }}>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', paddingRight: "20px" }}>
+                        <Avatar alt="JKUAT Logo"
+                            src="/jkuat-logo.png"
+                            sx={{ width: 35, height: 35, padding: "30px" }}
+                        />
+                        <Button sx={{ height: "2rem", margin: "30px" }} variant="contained" color="info" onClick={() => { navigate("/login") }}>Login</Button>
+                    </Box>
                     <Tabs
                         value={value}
                         onChange={handleChange}

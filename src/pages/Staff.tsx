@@ -6,9 +6,12 @@ export default function Staff() {
     return (
         <Box>
             <Box sx={{ width: "100%" }}>
-                <Typography gutterBottom variant="h5" component="div">
-                    Staff
-                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', paddingRight: "20px" }}>
+                    <Typography variant="h6">
+                        Staff
+                    </Typography>
+                    <Button sx={{ height: "2rem", margin: "30px" }} variant="contained" color="info">Add Staff</Button>
+                </Box>
                 <Masonry columns={{ xs: 1, sm: 1, md: 4, }}>
                     {/* {
                                 savedNews.map((v, i) =>

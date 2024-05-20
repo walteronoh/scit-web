@@ -76,12 +76,12 @@ export default function ResponsiveDrawer(props: Props) {
             icon: <Home />,
             section: 0
         },
-        {
-            title: 'Profile',
-            route: '/profile',
-            icon: <Home />,
-            section: 0
-        }
+        // {
+        //     title: 'Profile',
+        //     route: '/profile',
+        //     icon: <Home />,
+        //     section: 0
+        // }
     ];
 
     const handleRedirect = (route: string) => {
@@ -130,6 +130,7 @@ export default function ResponsiveDrawer(props: Props) {
                     sx={{
                         width: { sm: `calc(100% - ${drawerWidth}px)` },
                         ml: { sm: `${drawerWidth}px` },
+                        backgroundColor: "green"
                     }}
                 >
                     <Toolbar>
