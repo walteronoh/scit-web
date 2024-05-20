@@ -3,6 +3,7 @@ import { setUserSession } from "../pages/common/session";
 import { AcademicsTypes } from "../pages/types/academics";
 import { ProgrammesTypes } from "../pages/types/programmes";
 import { StaffTypes } from "../pages/types/staff";
+import { ActivitiesTypes } from "../pages/types/activities";
 
 const supabase = createClient(process.env.REACT_APP_SUPABASE_URL + '', process.env.REACT_APP_SUPABASE_KEY + '');
 
@@ -91,4 +92,24 @@ const fetchStaff = async () => {
     return [];
 }
 
-export { authenticateUser, addUser, addAcademics, fetchAcademics, fetchPaymentMethods, addProgramme, fetchProgrammes, addStaff, fetchStaff }
+// Staff
+// Add
+const addActivity = async (data: ActivitiesTypes) => {
+    const resp = await supabase.from('activities').insert([data]);
+    if (resp.status === 201) {
+        return true;
+    }
+    return false
+}
+
+// Fetch
+const fetchActivities = async () => {
+    const resp = await supabase.from('activities').select();
+    if (resp.status === 200) {
+        return resp.data as Array<ActivitiesTypes>;
+    }
+    console.log(resp.error);
+    return [];
+}
+
+export { authenticateUser, addUser, addAcademics, fetchAcademics, fetchPaymentMethods, addProgramme, fetchProgrammes, addStaff, fetchStaff, addActivity, fetchActivities }

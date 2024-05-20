@@ -1,21 +1,38 @@
 import { Masonry } from "@mui/lab";
 import { Box, Typography, Card, CardMedia, CardContent, Button, CardActions, Modal, TextField, Alert } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Appstyles from "./common/styles";
 import { getUserSession } from "./common/session";
-import { addProgramme } from "../api/api";
+import { addProgramme, fetchProgrammes } from "../api/api";
+import { ProgrammesTypes } from "./types/programmes";
 
 export default function Programmes() {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState({
         name: "",
         description: "",
-        department: ""
+        department: "",
+        banner: ""
     });
     const [alert, setAlert] = useState({
         severity: "0",
         message: ""
-    })
+    });
+    const [programmes, setProgrammes] = useState<Array<ProgrammesTypes>>();
+    const [pageLoaded, setPageLoaded] = useState(false);
+
+    useEffect(() => {
+        if (!pageLoaded) {
+            setPageLoaded(true);
+            handleFetchProgrammes();
+        }
+    }, [pageLoaded]);
+
+    const handleFetchProgrammes = () => {
+        fetchProgrammes().then((resp) => {
+            setProgrammes(resp);
+        }).catch((error) => { })
+    };
 
     const userSession = () => {
         return getUserSession();
@@ -25,7 +42,8 @@ export default function Programmes() {
         setInput({
             name: "",
             description: "",
-            department: ""
+            department: "",
+            banner: ""
         });
         setTimeout(() => {
             setAlert({
@@ -100,6 +118,15 @@ export default function Programmes() {
                                 defaultValue=""
                                 onChange={(e) => setInput((prevValue) => ({ ...prevValue, department: e.target.value }))}
                             />
+                            <TextField
+                                required
+                                type="text"
+                                id="outlined-required"
+                                label="Banner"
+                                helperText="Banner i.e., (https://example.com/banner.png)"
+                                defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, banner: e.target.value }))}
+                            />
                             <Button variant="contained" onClick={handleAddProgramme}>Save</Button>
                             {
                                 alert.message &&
@@ -110,25 +137,27 @@ export default function Programmes() {
                 </Modal>
                 <Masonry columns={{ xs: 1, sm: 1, md: 4, }}>
                     {
-                        [1, 2, 3, 4, 5].map((v, i) =>
-                            <Card key={i}>
-                                <CardMedia
-                                    sx={{ height: 400 }}
-                                    image="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.sYbySbeJYT2qmBKFCzeYqAHaLH%26pid%3DApi&f=1&ipt=0df635d05e806d119d495a9ec61dd7073b5f67bf233ed5b5a729b68241919b86&ipo=images"
-                                    title="Cougars"
-                                />
-                                <CardContent>
-                                    <Typography gutterBottom variant="h6" component="div">
-                                        Education | School
-                                    </Typography>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Info ..
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button size="small">Apply Now</Button>
-                                </CardActions>
-                            </Card>)
+                        programmes ?
+                            programmes.map((v, i) =>
+                                <Card key={i}>
+                                    <CardMedia
+                                        sx={{ height: 400 }}
+                                        image={v.banner}
+                                        title="Programme Banner"
+                                    />
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h6" component="div">
+                                            {v.name}
+                                        </Typography>
+                                        <Typography variant="body1" color="text.secondary">
+                                            {v.description}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Apply Now</Button>
+                                    </CardActions>
+                                </Card>)
+                            : <></>
                     }
                 </Masonry>
             </Box>

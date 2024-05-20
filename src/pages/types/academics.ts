@@ -3,7 +3,8 @@ interface AcademicsTypes {
     description: string,
     period: number,
     amount: number,
-    instructor: string
+    instructor: string,
+    banner: string
 }
 
 export type { AcademicsTypes }

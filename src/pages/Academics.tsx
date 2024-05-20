@@ -1,9 +1,10 @@
 import { Masonry } from "@mui/lab";
-import { Alert, Box, Button, Card, CardActions, CardContent, CardMedia, Modal, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Card, CardActions, CardContent, CardMedia, Chip, Modal, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Appstyles from "./common/styles";
 import { getUserSession } from "./common/session";
 import { addAcademics, fetchAcademics } from "../api/api";
+import { AcademicsTypes } from "./types/academics";
 
 export default function Academics() {
     const [open, setOpen] = useState(false);
@@ -12,26 +13,32 @@ export default function Academics() {
         description: "",
         period: 0,
         amount: 0,
-        instructor: ""
+        instructor: "",
+        banner: ""
     });
     const [alert, setAlert] = useState({
         severity: "0",
         message: ""
-    })
+    });
+    const [academics, setAcademics] = useState<Array<AcademicsTypes>>();
+    const [pageLoaded, setPageLoaded] = useState(false);
 
     const userSession = () => {
         return getUserSession();
     }
 
     useEffect(() => {
-        // fetchAcademics().then((resp) => {
-        //     console.log("Resp");
-        //     console.log(resp);
-        // }).catch((err) => {
-        //     console.log("Err");
-        //     console.log(err);
-        // })
-    }, [])
+        if (!pageLoaded) {
+            setPageLoaded(true);
+            handleFetchAcademics();
+        }
+    }, [pageLoaded]);
+
+    const handleFetchAcademics = () => {
+        fetchAcademics().then((resp) => {
+            setAcademics(resp);
+        }).catch((error) => { })
+    };
 
     const resetFields = () => {
         setInput({
@@ -39,7 +46,8 @@ export default function Academics() {
             description: "",
             period: 0,
             amount: 0,
-            instructor: ""
+            instructor: "",
+            banner: ""
         });
         setTimeout(() => {
             setAlert({
@@ -133,6 +141,15 @@ export default function Academics() {
                                 defaultValue=""
                                 onChange={(e) => setInput((prevValue) => ({ ...prevValue, amount: Number(e.target.value) }))}
                             />
+                            <TextField
+                                required
+                                type="text"
+                                id="outlined-required"
+                                label="Banner"
+                                helperText="Banner i.e., (https://example.com/banner.png)"
+                                defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, banner: e.target.value }))}
+                            />
                             <Button variant="contained" onClick={handleAddAcademics}>Save</Button>
                             {
                                 alert.message &&
@@ -143,25 +160,30 @@ export default function Academics() {
                 </Modal>
                 <Masonry columns={{ xs: 1, sm: 1, md: 4, }}>
                     {
-                        [1, 2, 3, 4, 5].map((v, i) =>
-                            <Card key={i}>
-                                <CardMedia
-                                    sx={{ height: 200 }}
-                                    image="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.sYbySbeJYT2qmBKFCzeYqAHaLH%26pid%3DApi&f=1&ipt=0df635d05e806d119d495a9ec61dd7073b5f67bf233ed5b5a729b68241919b86&ipo=images"
-                                    title="Cougars"
-                                />
-                                <CardContent>
-                                    <Typography gutterBottom variant="h6" component="div">
-                                        Cisco Academy
-                                    </Typography>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Info ..
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button size="small">Apply Now</Button>
-                                </CardActions>
-                            </Card>)
+                        academics ?
+                            academics.map((v, i) =>
+                                <Card key={i}>
+                                    <CardMedia
+                                        sx={{ height: 200 }}
+                                        image={v.banner}
+                                        title="Package Image"
+                                    />
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h6" component="div">
+                                            {v.name}
+                                        </Typography>
+                                        <Typography variant="body1" color="text.secondary">
+                                            {v.description}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Chip label={`${v.period} weeks`} variant="outlined" color="success" />
+                                        <Chip label={`Kshs. ${v.amount}`} variant="outlined" />
+                                        <Button size="small">Apply Now</Button>
+                                    </CardActions>
+                                </Card>
+                            )
+                            : <></>
                     }
                 </Masonry>
             </Box>

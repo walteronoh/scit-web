@@ -1,10 +1,11 @@
 import { Masonry } from "@mui/lab";
 import { Alert, Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Modal, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import '../App.css';
 import Appstyles from "./common/styles";
 import { getUserSession } from "./common/session";
-import { addStaff } from "../api/api";
+import { addStaff, fetchStaff } from "../api/api";
+import { StaffTypes } from "./types/staff";
 
 const style = {
     position: 'absolute',
@@ -27,6 +28,21 @@ export default function Staff() {
         role: ""
     });
     const [alert, setAlert] = useState({ severity: "0", message: "" });
+    const [staff, setStaff] = useState<Array<StaffTypes>>();
+    const [pageLoaded, setPageLoaded] = useState(false);
+
+    useEffect(() => {
+        if (!pageLoaded) {
+            setPageLoaded(true);
+            handleFetchStaff();
+        }
+    }, [pageLoaded]);
+
+    const handleFetchStaff = () => {
+        fetchStaff().then((resp) => {
+            setStaff(resp);
+        }).catch((error) => { })
+    };
 
     const userSession = () => {
         return getUserSession();
@@ -112,15 +128,15 @@ export default function Staff() {
                                 defaultValue=""
                                 onChange={(e) => setInput((prevValue) => ({ ...prevValue, role: e.target.value }))}
                             />
-                            {/* <TextField
+                            <TextField
                                 required
-                                type=""
+                                type="text"
                                 id="outlined-required"
                                 label="Profile"
                                 helperText="Profile"
                                 defaultValue=""
                                 onChange={(e) => setInput((prevValue) => ({ ...prevValue, profile: e.target.value }))}
-                            /> */}
+                            />
                             <Button variant="contained" onClick={handleAddStaff}>Save</Button>
                             {
                                 alert.message &&
@@ -130,42 +146,25 @@ export default function Staff() {
                     </Box>
                 </Modal>
                 <Masonry columns={{ xs: 1, sm: 1, md: 4, }}>
-                    {/* {
-                                savedNews.map((v, i) =>
-                                    <Card key={i}>
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h6" component="div">
-                                                {v.news_header}
-                                            </Typography>
-                                            <Typography variant="body1" color="text.secondary">
-                                                {v.news_cut}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button size="small" onClick={() => {
-                                                navigate(`/read-news/${v.id}`);
-                                            }}>Read More</Button>
-                                        </CardActions>
-                                    </Card>
-                                )
-                            } */}
                     {
-                        [1, 2, 3, 4, 5].map((v, i) =>
-                            <Card key={i}>
-                                <CardMedia
-                                    sx={{ height: 400 }}
-                                    image="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.sYbySbeJYT2qmBKFCzeYqAHaLH%26pid%3DApi&f=1&ipt=0df635d05e806d119d495a9ec61dd7073b5f67bf233ed5b5a729b68241919b86&ipo=images"
-                                    title="Cougars"
-                                />
-                                <CardContent>
-                                    <Typography gutterBottom variant="h6" component="div">
-                                        Miss x y z
-                                    </Typography>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Desc
-                                    </Typography>
-                                </CardContent>
-                            </Card>)
+                        staff ?
+                            staff.map((v, i) =>
+                                <Card key={i}>
+                                    <CardMedia
+                                        sx={{ height: 400 }}
+                                        image={v.profile}
+                                        title="Staff Profile"
+                                    />
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h6" component="div">
+                                            {v.full_name} , {v.role}
+                                        </Typography>
+                                        <Typography variant="body1" color="text.secondary">
+                                            {v.description}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>)
+                            : <></>
                     }
                 </Masonry>
             </Box>
