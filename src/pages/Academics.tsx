@@ -5,8 +5,10 @@ import Appstyles from "./common/styles";
 import { getUserSession } from "./common/session";
 import { addAcademics, fetchAcademics } from "../api/api";
 import { AcademicsTypes } from "./types/academics";
+import { useNavigate } from "react-router-dom";
 
 export default function Academics() {
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState({
         name: "",
@@ -179,7 +181,9 @@ export default function Academics() {
                                     <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                         <Chip label={`${v.period} weeks`} variant="outlined" color="success" />
                                         <Chip label={`Kshs. ${v.amount}`} variant="outlined" />
-                                        <Button size="small">Apply Now</Button>
+                                        <Button size="small" onClick={() => {
+                                            navigate(`/apply-now?mode=academic&course=${v.name}`);
+                                        }}>Apply Now</Button>
                                     </CardActions>
                                 </Card>
                             )

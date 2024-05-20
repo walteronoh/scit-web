@@ -1,6 +1,7 @@
 interface ActivitiesTypes {
     title: string,
-    description: string
+    description: string,
+    link: string
 }
 
 export type { ActivitiesTypes }

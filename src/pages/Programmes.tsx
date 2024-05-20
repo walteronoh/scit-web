@@ -5,8 +5,10 @@ import Appstyles from "./common/styles";
 import { getUserSession } from "./common/session";
 import { addProgramme, fetchProgrammes } from "../api/api";
 import { ProgrammesTypes } from "./types/programmes";
+import { useNavigate } from "react-router-dom";
 
 export default function Programmes() {
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState({
         name: "",
@@ -154,7 +156,9 @@ export default function Programmes() {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="small">Apply Now</Button>
+                                        <Button size="small" onClick={() => {
+                                            navigate(`/apply-now?mode=program&course=${v.name}`);
+                                        }}>Apply Now</Button>
                                     </CardActions>
                                 </Card>)
                             : <></>

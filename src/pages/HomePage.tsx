@@ -8,25 +8,14 @@ import Appstyles from "./common/styles";
 import { addActivity, fetchActivities } from "../api/api";
 import { ActivitiesTypes } from "./types/activities";
 import { error } from "console";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
-    const items = [
-        {
-            name: "Random Name #1",
-            description: "Probably the most random thing you have ever seen!",
-            imageUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.sYbySbeJYT2qmBKFCzeYqAHaLH%26pid%3DApi&f=1&ipt=0df635d05e806d119d495a9ec61dd7073b5f67bf233ed5b5a729b68241919b86&ipo=images"
-        },
-        {
-            name: "Random Name #2",
-            description: "Hello World!",
-            imageUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.sYbySbeJYT2qmBKFCzeYqAHaLH%26pid%3DApi&f=1&ipt=0df635d05e806d119d495a9ec61dd7073b5f67bf233ed5b5a729b68241919b86&ipo=images"
-        }
-    ];
-
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState({
         title: "",
-        description: ""
+        description: "",
+        link: ""
     });
     const [alert, setAlert] = useState({
         severity: "0",
@@ -55,7 +44,8 @@ export default function HomePage() {
     const resetFields = () => {
         setInput({
             title: "",
-            description: ""
+            description: "",
+            link: ""
         });
         setTimeout(() => {
             setAlert({
@@ -127,6 +117,15 @@ export default function HomePage() {
                             defaultValue=""
                             onChange={(e) => setInput((prevValue) => ({ ...prevValue, description: e.target.value }))}
                         />
+                        <TextField
+                            required
+                            type="text"
+                            id="outlined-required"
+                            label="Activity Link"
+                            helperText="Activity Link i.e., https://portal.jkuat.co.ke"
+                            defaultValue=""
+                            onChange={(e) => setInput((prevValue) => ({ ...prevValue, link: e.target.value }))}
+                        />
                         <Button variant="contained" onClick={handleAddActivity}>Save</Button>
                         {
                             alert.message &&
@@ -148,7 +147,7 @@ export default function HomePage() {
                                     <Typography variant="body1">
                                         {v.description}
                                     </Typography>
-                                    <Button variant="contained" color="primary">
+                                    <Button variant="contained" color="primary" onClick={() => { window.location.href = v.link }}>
                                         Read More
                                     </Button>
                                 </div>
