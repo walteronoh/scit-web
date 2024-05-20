@@ -1,14 +1,52 @@
 import { Masonry } from "@mui/lab";
-import { Box, Typography, Card, CardMedia, CardContent, Button, CardActions, Modal, TextField } from "@mui/material";
+import { Box, Typography, Card, CardMedia, CardContent, Button, CardActions, Modal, TextField, Alert } from "@mui/material";
 import React, { useState } from "react";
 import Appstyles from "./common/styles";
 import { getUserSession } from "./common/session";
+import { addProgramme } from "../api/api";
 
 export default function Programmes() {
     const [open, setOpen] = useState(false);
+    const [input, setInput] = useState({
+        name: "",
+        description: "",
+        department: ""
+    });
+    const [alert, setAlert] = useState({
+        severity: "0",
+        message: ""
+    })
 
     const userSession = () => {
         return getUserSession();
+    }
+
+    const resetFields = () => {
+        setInput({
+            name: "",
+            description: "",
+            department: ""
+        });
+        setTimeout(() => {
+            setAlert({
+                severity: "0",
+                message: ""
+            });
+        }, 3000)
+
+    }
+
+    const handleAddProgramme = () => {
+        addProgramme(input).then((resp) => {
+            if (resp) {
+                setAlert({ severity: "0", message: "Programme Successfully Added" });
+                resetFields();
+            } else {
+                setAlert({ severity: "1", message: "We were not able to add the Programme" });
+            }
+        }).catch((error) => {
+            setAlert({ severity: "1", message: "We encountered an error while adding the Programme" });
+        });
     }
 
     return (
@@ -42,6 +80,7 @@ export default function Programmes() {
                                 label="Programme Name"
                                 helperText="Programme Name"
                                 defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, name: e.target.value }))}
                             />
                             <TextField
                                 required
@@ -50,8 +89,22 @@ export default function Programmes() {
                                 label="Description"
                                 helperText="Description"
                                 defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, description: e.target.value }))}
                             />
-                            <Button variant="contained">Save</Button>
+                            <TextField
+                                required
+                                type="text"
+                                id="outlined-required"
+                                label="Department"
+                                helperText="Department"
+                                defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, department: e.target.value }))}
+                            />
+                            <Button variant="contained" onClick={handleAddProgramme}>Save</Button>
+                            {
+                                alert.message &&
+                                <Alert severity={alert.severity == "1" ? 'error' : 'success'}>{alert.message}</Alert>
+                            }
                         </Box>
                     </Box>
                 </Modal>

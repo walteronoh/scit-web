@@ -1,9 +1,10 @@
 import { Masonry } from "@mui/lab";
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Modal, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import '../App.css';
 import Appstyles from "./common/styles";
 import { getUserSession } from "./common/session";
+import { addStaff } from "../api/api";
 
 const style = {
     position: 'absolute',
@@ -19,9 +20,45 @@ const style = {
 
 export default function Staff() {
     const [open, setOpen] = useState(false);
+    const [input, setInput] = useState({
+        full_name: "",
+        description: "",
+        profile: "",
+        role: ""
+    });
+    const [alert, setAlert] = useState({ severity: "0", message: "" });
 
     const userSession = () => {
         return getUserSession();
+    }
+
+    const resetFields = () => {
+        setInput({
+            full_name: "",
+            description: "",
+            profile: "",
+            role: ""
+        });
+        setTimeout(() => {
+            setAlert({
+                severity: "0",
+                message: ""
+            });
+        }, 3000)
+
+    }
+
+    const handleAddStaff = () => {
+        addStaff(input).then((resp) => {
+            if (resp) {
+                setAlert({ severity: "0", message: "Staff Successfully Added" });
+                resetFields();
+            } else {
+                setAlert({ severity: "1", message: "We were not able to add the Staff" });
+            }
+        }).catch((error) => {
+            setAlert({ severity: "1", message: "We encountered an error while adding the Staff" });
+        })
     }
 
     return (
@@ -55,6 +92,7 @@ export default function Staff() {
                                 label="Full Name"
                                 helperText="Full Name"
                                 defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, full_name: e.target.value }))}
                             />
                             <TextField
                                 required
@@ -63,8 +101,31 @@ export default function Staff() {
                                 label="Description"
                                 helperText="Description"
                                 defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, description: e.target.value }))}
                             />
-                            <Button variant="contained">Save</Button>
+                            <TextField
+                                required
+                                type="text"
+                                id="outlined-required"
+                                label="Role i.e Dean Of Students"
+                                helperText="Role"
+                                defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, role: e.target.value }))}
+                            />
+                            {/* <TextField
+                                required
+                                type=""
+                                id="outlined-required"
+                                label="Profile"
+                                helperText="Profile"
+                                defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, profile: e.target.value }))}
+                            /> */}
+                            <Button variant="contained" onClick={handleAddStaff}>Save</Button>
+                            {
+                                alert.message &&
+                                <Alert severity={alert.severity == "1" ? 'error' : 'success'}>{alert.message}</Alert>
+                            }
                         </Box>
                     </Box>
                 </Modal>

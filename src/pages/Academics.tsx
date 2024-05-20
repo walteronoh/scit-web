@@ -1,14 +1,67 @@
 import { Masonry } from "@mui/lab";
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Modal, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { Alert, Box, Button, Card, CardActions, CardContent, CardMedia, Modal, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import Appstyles from "./common/styles";
 import { getUserSession } from "./common/session";
+import { addAcademics, fetchAcademics } from "../api/api";
 
 export default function Academics() {
     const [open, setOpen] = useState(false);
+    const [input, setInput] = useState({
+        name: "",
+        description: "",
+        period: 0,
+        amount: 0,
+        instructor: ""
+    });
+    const [alert, setAlert] = useState({
+        severity: "0",
+        message: ""
+    })
 
     const userSession = () => {
         return getUserSession();
+    }
+
+    useEffect(() => {
+        // fetchAcademics().then((resp) => {
+        //     console.log("Resp");
+        //     console.log(resp);
+        // }).catch((err) => {
+        //     console.log("Err");
+        //     console.log(err);
+        // })
+    }, [])
+
+    const resetFields = () => {
+        setInput({
+            name: "",
+            description: "",
+            period: 0,
+            amount: 0,
+            instructor: ""
+        });
+        setTimeout(() => {
+            setAlert({
+                severity: "0",
+                message: ""
+            });
+        }, 3000)
+
+    }
+
+    const handleAddAcademics = () => {
+        addAcademics(input).then((resp) => {
+            if (resp) {
+                setAlert({ severity: "0", message: "Academic Package Successfully Added" });
+                // Reset fields
+                resetFields();
+            } else {
+                setAlert({ severity: "1", message: "We were not able to add the Academic Package" });
+            }
+        }).catch((error) => {
+            setAlert({ severity: "1", message: "We encountered an error while adding the Package" });
+        });
     }
 
     return (
@@ -42,6 +95,7 @@ export default function Academics() {
                                 label="Package Name"
                                 helperText="Package Name"
                                 defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, name: e.target.value }))}
                             />
                             <TextField
                                 required
@@ -50,8 +104,40 @@ export default function Academics() {
                                 label="Description"
                                 helperText="Description"
                                 defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, description: e.target.value }))}
                             />
-                            <Button variant="contained">Save</Button>
+                            <TextField
+                                required
+                                type="text"
+                                id="outlined-required"
+                                label="Instructor"
+                                helperText="Instructor"
+                                defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, instructor: e.target.value }))}
+                            />
+                            <TextField
+                                required
+                                type="number"
+                                id="outlined-required"
+                                label="Period (Weeks)"
+                                helperText="Period"
+                                defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, period: Number(e.target.value) }))}
+                            />
+                            <TextField
+                                required
+                                type="number"
+                                id="outlined-required"
+                                label="Amount"
+                                helperText="Amount"
+                                defaultValue=""
+                                onChange={(e) => setInput((prevValue) => ({ ...prevValue, amount: Number(e.target.value) }))}
+                            />
+                            <Button variant="contained" onClick={handleAddAcademics}>Save</Button>
+                            {
+                                alert.message &&
+                                <Alert severity={alert.severity == "1" ? 'error' : 'success'}>{alert.message}</Alert>
+                            }
                         </Box>
                     </Box>
                 </Modal>
