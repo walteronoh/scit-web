@@ -52,7 +52,7 @@
   /* Adjust height as needed */
   /* background-size: cover;
   background-position: center;*/
-  color: #fff !important; 
+  color: #fff !important;
   /* Ensure text is visible on the background */
   display: flex;
   justify-content: center;
@@ -63,4 +63,14 @@
 .carousel-content {
   background: rgba(0, 0, 0, 0.4);
   padding: 20px;
+}
+
+.model-box {
+  position: 'absolute';
+  top: '50%';
+  left: '50%';
+  transform: 'translate(-50%, -50%)';
+  width: 40;
+  border: '2px solid #000';
+  box-shadow: 24;
 }
